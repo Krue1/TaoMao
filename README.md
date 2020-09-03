@@ -5,7 +5,12 @@
 - ### 项目安装
 
   - `vue create taomao-management-fe`
-    > `vue 2.x` **\*** <br> > `Babel` **\*** <br> > `Router` **\*** <br> > `Vuex` **\*** <br> > `CSS Pre-processor` **\*** <br> > `Linter/Formatter` **\*** <br>
+    > `vue 2.x` **\*** <br>
+    > `Babel` **\*** <br>
+    > `Router` **\*** <br>
+    > `Vuex` **\*** <br>
+    > `CSS Pre-processor` **\*** <br>
+    > `Linter/Formatter` **\*** <br>
   - `Use history mode for router?(Requires proper server setup for index fallback in production) (Y/n)` **n**
   - `Pick a CSS pre-processor (PostCSS, Autoprefixer and CSS Modules are supported by default):` **Sass/SCSS (with dart-sass)**
   - `Pick a linter / formatter config:` **ESLint + Prettier**
