@@ -4,6 +4,7 @@ import router from './router';
 import store from './store';
 import '@/plugins/elementUI.js';
 import api from '@/api';
+import '@/permission.js';
 
 Vue.prototype.$api = api;
 Vue.config.productionTip = false;
