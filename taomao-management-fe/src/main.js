@@ -9,6 +9,11 @@ import '@/permission.js';
 Vue.prototype.$api = api;
 Vue.config.productionTip = false;
 
+//如果本地存储中有token，则网页刷新后仍然保留并存入store中管理
+if (localStorage.getItem('token')) {
+  store.dispatch('setTokenAction', localStorage.getItem('token'));
+}
+
 new Vue({
   router,
   store,

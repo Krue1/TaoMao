@@ -4,14 +4,11 @@
       <span>我的名字</span>
     </div>-->
     <el-menu
-      default-active="movie"
+      default-active="news"
       class="nav-menu"
       @open="handleOpen"
       @close="handleClose"
       @select="handleSelect"
-      background-color="#fff"
-      text-color="#000"
-      active-text-color="#3a1"
     >
       <div class="nav-info">
         <span>我的名字</span>
@@ -33,7 +30,7 @@
         <span slot="title">笑话</span>
       </el-menu-item>
       <div class="logout-button">
-        <el-button type="text">
+        <el-button type="text" @click="logout">
           <i class="el-icon-switch-button"></i>
           退出登录
         </el-button>
@@ -46,7 +43,7 @@
 export default {
   data() {
     return {
-      activeIndex: "movie",
+      activeIndex: "news",
       nav_menu_data: [
         {
           title: "新闻",
@@ -90,6 +87,10 @@ export default {
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
+    },
+    logout() {
+      localStorage.removeItem("token");
+      this.$router.push({ name: "Login" });
     }
   }
 };

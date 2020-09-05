@@ -23,24 +23,36 @@ const routes = [
         path: '/news',
         name: 'News',
         component: () => import('../views/News.vue'),
+        meta: {
+          requireAuth: true,
+        },
       },
       {
         path: '/movie',
         name: 'Movie',
         component: () =>
           import(/* webpackChunkName: "about" */ '../views/Movie.vue'),
+        meta: {
+          requireAuth: true,
+        },
       },
       {
         path: '/music',
         name: 'Music',
         component: () =>
           import(/* webpackChunkName: "about" */ '../views/Music.vue'),
+        meta: {
+          requireAuth: true,
+        },
       },
       {
         path: '/jokes',
         name: 'Jokes',
         component: () =>
           import(/* webpackChunkName: "about" */ '../views/Jokes.vue'),
+        meta: {
+          requireAuth: true,
+        },
       },
     ],
   },

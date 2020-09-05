@@ -37,17 +37,19 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
-    var validateAccount = (rule, value, callback) => {
+    let validateAccount = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入帐号"));
       } else if (!/^1[3|4|5|6|7|8|9]\d{9}$/.test(value)) {
         callback(new Error("请输入格式正确的帐号（手机号）"));
+      } else {
         callback();
       }
     };
-    var validatePassword = (rule, value, callback) => {
+    let validatePassword = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
@@ -66,10 +68,19 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["setTokenAction"]),
     login(formName) {
+      let _self = this;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          _self.$message({
+            message: "登录成功",
+            type: "success"
+          });
+          const token = 222;
+          this.setTokenAction(token);
+          localStorage.setItem("token", token);
+          _self.$router.push({ name: "News" });
         } else {
           console.log("error submit!!");
           return false;
