@@ -14,10 +14,16 @@ export default new Vuex.Store({
     setToken(state, token) {
       state.token = token;
     },
+    setAdminInfo(state, adminInfo) {
+      state.adminInfo = adminInfo;
+    },
   },
   actions: {
     setTokenAction({ commit }, token) {
       commit('setToken', token);
+    },
+    setAdminInfoAction({ commit }, adminInfo) {
+      commit('setAdminInfo', adminInfo);
     },
   },
   modules: {},

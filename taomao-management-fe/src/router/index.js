@@ -28,10 +28,10 @@ const routes = [
         },
       },
       {
-        path: '/movie',
-        name: 'Movie',
+        path: '/management',
+        name: 'Management',
         component: () =>
-          import(/* webpackChunkName: "about" */ '../views/Movie.vue'),
+          import(/* webpackChunkName: "about" */ '../views/Management.vue'),
         meta: {
           requireAuth: true,
         },

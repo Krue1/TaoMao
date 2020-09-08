@@ -11,15 +11,15 @@
       @select="handleSelect"
     >
       <div class="nav-info">
-        <span>我的名字</span>
+        <span>{{ adminInfo.name }}</span>
       </div>
       <el-menu-item index="news">
         <i class="el-icon-menu"></i>
         <span slot="title">新闻</span>
       </el-menu-item>
-      <el-menu-item index="movie">
+      <el-menu-item index="management">
         <i class="el-icon-menu"></i>
-        <span slot="title">影视</span>
+        <span slot="title">商品管理</span>
       </el-menu-item>
       <el-menu-item index="music">
         <i class="el-icon-document"></i>
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -50,8 +51,8 @@ export default {
           index: "news"
         },
         {
-          title: "影视",
-          index: "movie"
+          title: "商品管理",
+          index: "management"
         },
         {
           title: "音乐",
@@ -65,14 +66,15 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["setAdminInfoAction", "setTokenAction"]),
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
       switch (key) {
         case "news":
           this.$router.push({ name: "News" });
           break;
-        case "movie":
-          this.$router.push({ name: "Movie" });
+        case "management":
+          this.$router.push({ name: "Management" });
           break;
         case "music":
           this.$router.push({ name: "Music" });
@@ -89,9 +91,14 @@ export default {
       console.log(key, keyPath);
     },
     logout() {
-      localStorage.removeItem("token");
+      localStorage.clear();
+      this.setTokenAction("");
+      this.setAdminInfoAction({});
       this.$router.push({ name: "Login" });
     }
+  },
+  computed: {
+    ...mapState(["adminInfo"])
   }
 };
 </script>
@@ -118,7 +125,7 @@ export default {
         width: 100%;
         text-align: center;
         font-weight: bolder;
-        font-size: 20px;
+        font-size: 16px;
       }
     }
 

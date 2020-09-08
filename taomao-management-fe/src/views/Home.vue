@@ -19,9 +19,16 @@ export default {
 
 <style scoped lang="scss">
 .home {
+  overflow-x: hidden;
   .right-view {
     float: left;
-    margin-left: 210px;
+    margin-left: 200px;
+    padding: 30px;
+    padding-top: 0;
+    width: calc(100vw - 260px);
+    min-height: calc(100vh - 30px);
+    background-color: #f5f5fb;
+    // background-color: #ddd;
   }
 }
 </style>

@@ -68,7 +68,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["setTokenAction"]),
+    ...mapActions(["setTokenAction", "setAdminInfoAction"]),
     login(formName) {
       let _self = this;
       this.$refs[formName].validate(valid => {
@@ -78,8 +78,13 @@ export default {
             type: "success"
           });
           const token = 222;
+          const adminInfo = {
+            name: "Admin"
+          };
           this.setTokenAction(token);
+          this.setAdminInfoAction(adminInfo);
           localStorage.setItem("token", token);
+          localStorage.setItem("adminInfo", JSON.stringify(adminInfo));
           _self.$router.push({ name: "News" });
         } else {
           console.log("error submit!!");

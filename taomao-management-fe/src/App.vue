@@ -5,9 +5,14 @@
 </template>
 
 <style lang="scss">
+@import "./assets/font/font.css";
 body {
   margin: 0;
-  font-family: "Microsoft YaHei";
+  font-family: "PingFang-RE", "Montserrat-RE", "Microsoft YaHei";
+  .el-button,
+  .el-input {
+    font-family: "PingFang-RE";
+  }
 }
 </style>
 
