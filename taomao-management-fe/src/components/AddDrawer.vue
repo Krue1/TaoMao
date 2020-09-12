@@ -1,10 +1,12 @@
 <template>
   <div>
     <el-drawer
-      title="我嵌套了 Form !"
+      title="新增商品"
       :before-close="handleClose"
       :visible.sync="_drawerVisible"
       custom-class="add-drawer"
+      :show-close="false"
+      size="50%"
       ref="drawer"
     >
       <div class="add-drawer__content">
@@ -25,8 +27,9 @@
             type="primary"
             @click="$refs.drawer.closeDrawer()"
             :loading="loading"
-            >{{ loading ? "提交中 ..." : "确 定" }}</el-button
           >
+            {{ loading ? "提交中 ..." : "确 定" }}
+          </el-button>
         </div>
       </div>
     </el-drawer>
@@ -47,13 +50,7 @@ export default {
       loading: false,
       form: {
         name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: ""
+        region: ""
       },
       formLabelWidth: "80px",
       timer: null
@@ -75,7 +72,9 @@ export default {
         return;
       }
       this.$confirm("确定要提交表单吗？")
-        .then(() => {})
+        .then(() => {
+          this.$emit("changeVisible", false);
+        })
         .catch(() => {});
     },
     cancelForm() {
@@ -85,5 +84,24 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+:focus {
+  outline: none;
+}
+.el-drawer {
+  padding: 2%;
+  padding-top: 0;
+  .el-drawer__header {
+    margin-bottom: 0;
+    padding: 30px;
+    padding-left: 2%;
+    color: #303133;
+    font-weight: bold;
+    font-size: 18px;
+    border-bottom: 1px solid #dcdfe6;
+  }
+  .add-drawer__content {
+    margin-top: 30px;
+  }
+}
 </style>

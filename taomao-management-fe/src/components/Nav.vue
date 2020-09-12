@@ -4,7 +4,7 @@
       <span>我的名字</span>
     </div>-->
     <el-menu
-      default-active="news"
+      :default-active="this.$route.path.slice(1)"
       class="nav-menu"
       @open="handleOpen"
       @close="handleClose"
