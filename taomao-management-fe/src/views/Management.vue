@@ -208,11 +208,12 @@ export default {
               type: "info",
               message: "取消删除"
             });
+          } else {
+            this.$message({
+              type: "error",
+              message: error.message
+            });
           }
-          this.$message({
-            type: "error",
-            message: error.message
-          });
         });
     },
     handleAdd() {
