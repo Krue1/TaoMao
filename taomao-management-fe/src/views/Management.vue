@@ -24,12 +24,16 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column label="日期" width="120">
-          <template slot-scope="scope">{{ scope.row.date }}</template>
+        <el-table-column label="名称" width="240" show-overflow-tooltip>
+          <template slot-scope="scope">{{ scope.row.name }}</template>
         </el-table-column>
-        <el-table-column prop="name" label="姓名" width="120">
+        <el-table-column prop="breed" label="品种" width="120">
         </el-table-column>
-        <el-table-column prop="address" label="地址" show-overflow-tooltip>
+        <el-table-column prop="price" label="价格" width="120">
+        </el-table-column>
+        <el-table-column prop="sale" label="已售" width="120">
+        </el-table-column>
+        <el-table-column prop="inventory" label="库存" width="120">
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -59,6 +63,7 @@
     <AddDrawer
       @changeVisible="changeVisible"
       :drawerVisible="drawerVisible"
+      @addGoods="addGoods"
     ></AddDrawer>
   </div>
 </template>
@@ -72,45 +77,59 @@ export default {
       tableData: [
         {
           id: 1,
-          date: "2016-05-03",
-          name: "牛大哥",
-          address: "上海市普陀区金沙江路 1518 弄"
+          name: "上海市普陀区金沙江路 1518 弄",
+          breed: "牛大哥",
+          price: 234,
+          sale: 1,
+          inventory: 11
         },
         {
           id: 2,
-          date: "2016-05-02",
-          name: "牛大哥",
-          address: "上海市普陀区金沙江路 1518 弄"
+          name: "上海市普陀区金沙江路 1518 弄",
+          breed: "牛大哥",
+          price: 234,
+          sale: 1,
+          inventory: 4
         },
         {
           id: 3,
-          date: "2016-05-04",
-          name: "牛大哥",
-          address: "上海市普陀区金沙江路 1518 弄"
+          name: "上海市普陀区金沙江路 1518 弄",
+          breed: "牛大哥",
+          price: 234,
+          sale: 1,
+          inventory: 1
         },
         {
           id: 4,
-          date: "2016-05-01",
-          name: "牛大哥",
-          address: "上海市普陀区金沙江路 1518 弄"
+          name: "上海市普陀区金沙江路 1518 弄",
+          breed: "牛大哥",
+          price: 234,
+          sale: 1,
+          inventory: 2
         },
         {
           id: 5,
-          date: "2016-05-08",
-          name: "牛大哥",
-          address: "上海市普陀区金沙江路 1518 弄"
+          name: "上海市普陀区金沙江路 1518 弄",
+          breed: "牛大哥",
+          price: 234,
+          sale: 1,
+          inventory: 4
         },
         {
           id: 6,
-          date: "2016-05-06",
-          name: "牛大哥",
-          address: "上海市普陀区金沙江路 1518 弄"
+          name: "上海市普陀区金沙江路 1518 弄",
+          breed: "牛大哥",
+          price: 234,
+          sale: 1,
+          inventory: 5
         },
         {
           id: 7,
-          date: "2016-05-07",
-          name: "牛大哥",
-          address: "上海市普陀区金沙江路 1518 弄"
+          name: "上海市普陀区金沙江路 1518 弄",
+          breed: "牛大哥",
+          price: 234,
+          sale: 1,
+          inventory: 3
         }
       ],
       tableShow: [],
@@ -139,6 +158,8 @@ export default {
         .then(() => {
           let itemId = row.id;
           this.tableData = this.tableData.filter(row => row.id !== itemId);
+          //需修改：调用删除单个商品的接口完成删除
+
           //如果当前页数据项仅为1个 且 当前页不为第一页，则翻到上一页
           let isPage = this.tableShow.length === 1 && this.currentPage !== 1;
           if (isPage) {
@@ -163,6 +184,7 @@ export default {
     },
     page(currentPage) {
       this.currentPage = currentPage;
+      //可能需修改：调用查询商品接口-有自带分页查询的情况下
       this.total = this.tableData.length;
       this.tableShow = this.tableData.slice(
         (currentPage - 1) * this.pageSize,
@@ -177,6 +199,7 @@ export default {
       })
         .then(() => {
           let items = this.multipleSelection;
+          //需修改：调用删除多个商品的接口完成删除-若没有，则循环调用删除单个的接口
           if (items.length) {
             items.forEach(item => {
               this.tableData = this.tableData.filter(row => row.id !== item.id);
@@ -221,6 +244,10 @@ export default {
     },
     changeVisible(dv) {
       this.drawerVisible = dv;
+    },
+    addGoods(goods) {
+      this.tableData.push(goods);
+      this.page(this.currentPage);
     }
   },
   components: {

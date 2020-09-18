@@ -8,6 +8,7 @@
       :show-close="false"
       size="38.2%"
       ref="drawer"
+      destroy-on-close
     >
       <div class="add-drawer__content">
         <el-form
@@ -36,115 +37,145 @@
               show-word-limit
             ></el-input>
           </el-form-item>
-          <el-form-item
-            label="品种"
-            :label-width="formLabelWidth"
-            prop="class_id"
-          >
+          <el-form-item label="品种" :label-width="formLabelWidth" prop="breed">
             <el-input
-              v-model="form.class_id"
+              v-model="form.breed"
               autocomplete="off"
               maxlength="20"
               show-word-limit
             ></el-input>
           </el-form-item>
-          <el-form :inline="true" :model="form" :rules="rules" ref="form">
-            <el-form-item
-              label="单价"
-              :label-width="inlineFormLabelWidth"
-              prop="price"
-              min="0"
-            >
-              <el-input
-                v-model.number="form.price"
-                autocomplete="off"
-                class="inline-input"
-              ></el-input>
-            </el-form-item>
-            <el-form-item
-              label="年龄"
-              :label-width="inlineFormLabelWidth"
-              prop="age"
-            >
-              <el-input
-                v-model.number="form.age"
-                autocomplete="off"
-                class="inline-input"
+          <el-row>
+            <el-col :span="8">
+              <el-form-item
+                label="单价"
+                :label-width="inlineFormLabelWidth"
+                prop="price"
                 min="0"
-              ></el-input>
-            </el-form-item>
-            <el-form-item
-              label="性别"
-              :label-width="inlineFormLabelWidth"
-              prop="sex"
-            >
-              <el-select
-                v-model="form.sex"
-                placeholder="请选择"
-                class="inline-input"
               >
-                <el-option value="男"> </el-option>
-                <el-option value="女"> </el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
-          <el-form :inline="true" :model="form">
-            <el-form-item
-              label="是否疫苗"
-              :label-width="formLabelWidth"
-              prop="vaccine"
-            >
-              <el-switch v-model="form.vaccine"></el-switch>
-            </el-form-item>
-            <el-form-item
-              label="是否驱虫"
-              :label-width="formLabelWidth"
-              prop="insect_repellent"
-              style="margin-left:160px"
-            >
-              <el-switch v-model="form.insect_repellent"></el-switch>
-            </el-form-item>
-          </el-form>
-          <el-form :inline="true" :model="form" :rules="rules" ref="form">
-            <el-form-item
-              label="已售"
-              :label-width="inlineFormLabelWidth"
-              prop="sale"
-            >
-              <el-input
-                v-model.number="form.sale"
-                autocomplete="off"
-                class="inline-input"
-              ></el-input>
-            </el-form-item>
-            <el-form-item
-              label="库存"
-              :label-width="inlineFormLabelWidth"
-              prop="sale"
-              style="margin-left:140px"
-            >
-              <el-input
-                v-model.number="form.stock"
-                autocomplete="off"
-                class="inline-input"
-              ></el-input>
-            </el-form-item>
-            <el-form-item
-              label="商品描述"
-              :label-width="formLabelWidth"
-              prop="descript"
-            >
-              <el-input
-                type="textarea"
-                placeholder="请输入商品描述"
-                v-model="form.descript"
-                resize="none"
-                :autosize="{ minRows: 3, maxRows: 20 }"
-                style="width:34.2vw"
+                <el-input
+                  v-model.number="form.price"
+                  autocomplete="off"
+                  class="inline-input"
+                >
+                  <template slot="suffix">元</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item
+                label="年龄"
+                :label-width="inlineFormLabelWidth"
+                prop="age"
               >
-              </el-input>
-            </el-form-item>
-          </el-form>
+                <el-input
+                  v-model.number="form.age"
+                  autocomplete="off"
+                  class="inline-input"
+                  min="0"
+                >
+                  <template slot="suffix">月</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item
+                label="性别"
+                :label-width="inlineFormLabelWidth"
+                prop="gender"
+              >
+                <el-select
+                  v-model="form.gender"
+                  placeholder="请选择"
+                  class="inline-input"
+                >
+                  <el-option value="公"> </el-option>
+                  <el-option value="母"> </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">
+              <el-form-item
+                label="疫苗"
+                :label-width="inlineFormLabelWidth"
+                prop="vaccine"
+              >
+                <el-input
+                  v-model.number="form.vaccine"
+                  autocomplete="off"
+                  class="inline-input"
+                >
+                  <template slot="suffix">针</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item
+                label="是否纯种"
+                :label-width="formLabelWidth"
+                prop="purebred"
+              >
+                <el-switch v-model="form.purebred"></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item
+                label="是否驱虫"
+                :label-width="formLabelWidth"
+                prop="insectRepellent"
+              >
+                <el-switch v-model="form.insectRepellent"></el-switch>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="16">
+              <el-form-item
+                label="已售"
+                :label-width="inlineFormLabelWidth"
+                prop="sale"
+              >
+                <el-input
+                  v-model.number="form.sale"
+                  autocomplete="off"
+                  class="inline-input"
+                >
+                  <template slot="suffix">只</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item
+                label="库存"
+                :label-width="inlineFormLabelWidth"
+                prop="inventory"
+              >
+                <el-input
+                  v-model.number="form.inventory"
+                  autocomplete="off"
+                  class="inline-input"
+                >
+                  <template slot="suffix">只</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item
+            label="商品描述"
+            :label-width="formLabelWidth"
+            prop="description"
+          >
+            <el-input
+              type="textarea"
+              placeholder="请输入商品描述"
+              v-model="form.description"
+              resize="none"
+              :autosize="{ minRows: 3, maxRows: 20 }"
+            >
+            </el-input>
+          </el-form-item>
         </el-form>
         <div class="demo-drawer__footer">
           <el-button @click="cancelForm">取 消</el-button>
@@ -171,21 +202,29 @@ export default {
     }
   },
   data() {
+    let validatePrice = (rule, value, callback) => {
+      if (value < 0) {
+        callback(new Error("单价不小于0"));
+      } else {
+        callback();
+      }
+    };
     return {
       loading: false,
       labelPosition: "left",
       form: {
-        class_id: "",
+        breed: "",
         name: "",
-        descript: "",
+        description: "",
         image: "",
-        price: 0,
+        price: 0.0,
         age: 0,
-        sex: "男",
-        vaccine: false,
-        insect_repellent: false,
+        gender: "公",
+        vaccine: 0,
+        purebred: false,
+        insectRepellent: false,
         sale: 0,
-        stock: 0
+        inventory: 0
       },
       formLabelWidth: "80px",
       inlineFormLabelWidth: "55px",
@@ -195,24 +234,36 @@ export default {
           { required: true, message: "请输入商品名称", trigger: "blur" },
           { min: 0, max: 60, message: "长度在 0 到 60 个字符", trigger: "blur" }
         ],
-        class_id: [
+        breed: [
           { required: true, message: "请输入猫的品种", trigger: "blur" },
           { min: 0, max: 20, message: "长度在 0 到 20 个字符", trigger: "blur" }
         ],
         price: [
           { required: true, message: "请输入单价", trigger: "blur" },
-          { type: "number", message: "请输入数字类型", trigger: "blur" }
+          { type: "number", message: "请输入数字类型", trigger: "blur" },
+          { validator: validatePrice, trigger: "blur" }
         ],
-        sex: [{ required: true, message: "请选择性别", trigger: "blur" }],
+        gender: [{ required: true, message: "请选择性别", trigger: "blur" }],
         age: [
           { required: true, message: "请输入年龄", trigger: "blur" },
           { type: "number", message: "请输入数字类型", trigger: "blur" }
+        ],
+        vaccine: [
+          { type: "number", message: "请输入数字类型", trigger: "blur" }
+        ],
+        purebred: [
+          { required: true, message: "是否纯种", trigger: "change" },
+          { type: "boolean", message: "请选择", trigger: "change" }
+        ],
+        insectRepellent: [
+          { required: true, message: "是否驱虫", trigger: "change" },
+          { type: "boolean", message: "请选择", trigger: "change" }
         ],
         sale: [
           { required: true, message: "请输入已售数量", trigger: "blur" },
           { type: "number", message: "请输入数字类型", trigger: "blur" }
         ],
-        stock: [
+        inventory: [
           { required: true, message: "请输入库存", trigger: "blur" },
           { type: "number", message: "请输入数字类型", trigger: "blur" }
         ]
@@ -238,10 +289,15 @@ export default {
         .then(() => {
           this.$refs.form.validate(valid => {
             if (valid) {
+              //需修改：调用新增商品接口把对象传过去，然后获得插入数据库后的对象传给父组件
+              let obj = this.deepClone(this.form);
+              obj.id = new Date();
+              this.$emit("addGoods", obj);
               this.$message({
                 message: "提交成功",
                 type: "success"
               });
+              this.$refs.form.resetFields();
               this.$emit("changeVisible", false);
             } else {
               this.$message({

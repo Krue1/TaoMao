@@ -9,6 +9,19 @@ import '@/permission.js';
 
 Vue.prototype.$api = api;
 Vue.config.productionTip = false;
+Vue.prototype.deepClone = function(obj) {
+  let isObject = (obj) =>
+    Object.prototype.toString.call(obj) === '[object Object]';
+  if (!isObject(obj)) {
+    throw new Error('obj 不是一个对象！');
+  }
+  let isArray = Array.isArray(obj);
+  let cloneObj = isArray ? [] : {};
+  for (let key in obj) {
+    cloneObj[key] = isObject(obj[key]) ? this.deepClone(obj[key]) : obj[key];
+  }
+  return cloneObj;
+};
 
 //如果本地存储中有token，则网页刷新后仍然保留并存入store中管理
 if (localStorage.getItem('token') && localStorage.getItem('adminInfo')) {
