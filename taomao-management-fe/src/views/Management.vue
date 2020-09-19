@@ -24,6 +24,8 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
+        <el-table-column prop="id" label="商品ID" width="120">
+        </el-table-column>
         <el-table-column label="名称" width="240" show-overflow-tooltip>
           <template slot-scope="scope">{{ scope.row.name }}</template>
         </el-table-column>

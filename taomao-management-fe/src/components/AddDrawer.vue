@@ -209,6 +209,13 @@ export default {
         callback();
       }
     };
+    let validateNonnegativeInteger = (rule, value, callback) => {
+      if (Number.isInteger(value) && value >= 0) {
+        callback();
+      } else {
+        callback(new Error("请输入非负整数"));
+      }
+    };
     return {
       loading: false,
       labelPosition: "left",
@@ -246,10 +253,13 @@ export default {
         gender: [{ required: true, message: "请选择性别", trigger: "blur" }],
         age: [
           { required: true, message: "请输入年龄", trigger: "blur" },
-          { type: "number", message: "请输入数字类型", trigger: "blur" }
+          { type: "number", message: "请输入数字类型", trigger: "blur" },
+          { validator: validateNonnegativeInteger, trigger: "blur" }
         ],
         vaccine: [
-          { type: "number", message: "请输入数字类型", trigger: "blur" }
+          { required: true, message: "请输入疫苗针数", trigger: "blur" },
+          { type: "number", message: "请输入数字类型", trigger: "blur" },
+          { validator: validateNonnegativeInteger, trigger: "blur" }
         ],
         purebred: [
           { required: true, message: "是否纯种", trigger: "change" },
@@ -261,11 +271,13 @@ export default {
         ],
         sale: [
           { required: true, message: "请输入已售数量", trigger: "blur" },
-          { type: "number", message: "请输入数字类型", trigger: "blur" }
+          { type: "number", message: "请输入数字类型", trigger: "blur" },
+          { validator: validateNonnegativeInteger, trigger: "blur" }
         ],
         inventory: [
           { required: true, message: "请输入库存", trigger: "blur" },
-          { type: "number", message: "请输入数字类型", trigger: "blur" }
+          { type: "number", message: "请输入数字类型", trigger: "blur" },
+          { validator: validateNonnegativeInteger, trigger: "blur" }
         ]
       }
     };
