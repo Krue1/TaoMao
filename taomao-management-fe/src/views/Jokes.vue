@@ -29,16 +29,16 @@
 </template>
 <script>
 export default {
-  name: 'Jokes',
+  name: "Jokes",
   data() {
     return {
-      name: '',
-      text: '',
-      passtime: '',
+      name: "",
+      text: "",
+      passtime: "",
       jokes: [],
       pageSize: 5,
       currentPage: 1,
-      total: 100,
+      total: 100
     };
   },
   methods: {
@@ -47,16 +47,16 @@ export default {
       this.$api
         .getJokes({
           params: {
-            page: currentPage,
-          },
+            page: currentPage
+          }
         })
-        .then((res) => {
+        .then(res => {
           _this.jokes = res.data.result.slice(0, 5);
         });
-    },
+    }
   },
   mounted() {
     this.page(1);
-  },
+  }
 };
 </script>

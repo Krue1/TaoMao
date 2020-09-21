@@ -10,6 +10,7 @@
           placeholder="搜索"
           prefix-icon="el-icon-search"
           v-model="searchText"
+          @keyup.native.enter="search"
         >
         </el-input>
       </template>
@@ -24,7 +25,12 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column prop="id" label="商品ID" width="120">
+        <el-table-column
+          prop="id"
+          label="商品ID"
+          width="120"
+          show-overflow-tooltip
+        >
         </el-table-column>
         <el-table-column label="名称" width="240" show-overflow-tooltip>
           <template slot-scope="scope">{{ scope.row.name }}</template>
@@ -67,12 +73,20 @@
       :drawerVisible="drawerVisible"
       @addGoods="addGoods"
     ></AddDrawer>
+    <EditDrawer
+      @changeVisible2="changeVisible2"
+      :drawerVisible2="drawerVisible2"
+      @editGoods="editGoods"
+    >
+    </EditDrawer>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import HeaderTitle from "@/components/HeaderTitle";
 import AddDrawer from "@/components/AddDrawer";
+import EditDrawer from "@/components/EditDrawer";
 export default {
   data() {
     return {
@@ -140,15 +154,39 @@ export default {
       pageSize: 5,
       currentPage: 1,
       total: 0,
-      drawerVisible: false
+      drawerVisible: false,
+      drawerVisible2: false
     };
   },
+  mounted() {
+    // let _this = this;
+    //需修改：调用获取全部商品的接口
+    // this.$api.getAllgoods().then(res => {
+    //   _this.tableData = res.data;
+    // }).catch((err) => this.$alert(err));
+    this.page(1);
+  },
   methods: {
+    ...mapActions(["setGoodsAction"]),
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
     handleEdit(index, row) {
       console.log(index, row);
+      //需修改：获取商品id，调用接口得到goods，将goods存入vuex
+      // const _this = this;
+      // this.$api
+      //   .getGoodsById(row.id,{})
+      //   .then((res) => {
+      //     _this.setGoodsAction(res.data);
+      //   });
+      this.drawerVisible2 = true;
+    },
+    changeVisible2(dv) {
+      this.drawerVisible2 = dv;
+    },
+    editGoods() {
+      this.page(this.currentPage);
     },
     handleDelete(index, row) {
       console.log(index, row);
@@ -250,14 +288,24 @@ export default {
     addGoods(goods) {
       this.tableData.push(goods);
       this.page(this.currentPage);
+    },
+    search() {
+      console.log("yesss");
+      let _this = this;
+      this.$api
+        .getGoodsByKeyword(this.searchText, {})
+        .then(res => {
+          // _this.tableData = res.data;
+          console.log(res);
+          _this.page(1);
+        })
+        .catch(err => this.$alert(err));
     }
   },
   components: {
     HeaderTitle,
-    AddDrawer
-  },
-  mounted() {
-    this.page(1);
+    AddDrawer,
+    EditDrawer
   }
 };
 </script>

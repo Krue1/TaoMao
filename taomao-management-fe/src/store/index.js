@@ -9,6 +9,22 @@ export default new Vuex.Store({
     adminInfo: {
       name: '',
     },
+    goods: {
+      id: '',
+      breed: '',
+      name: '',
+      description: '',
+      price: 0.0,
+      age: 0,
+      gender: '公',
+      vaccine: 0,
+      purebred: false,
+      insectRepellent: false,
+      inventory: 0,
+      soldQuantity: 0,
+      coverPath: '',
+      picturePath: '',
+    },
   },
   mutations: {
     setToken(state, token) {
@@ -17,6 +33,9 @@ export default new Vuex.Store({
     setAdminInfo(state, adminInfo) {
       state.adminInfo = adminInfo;
     },
+    setGoods(state, goods) {
+      Object.assign(state.goods, goods);
+    },
   },
   actions: {
     setTokenAction({ commit }, token) {
@@ -24,6 +43,9 @@ export default new Vuex.Store({
     },
     setAdminInfoAction({ commit }, adminInfo) {
       commit('setAdminInfo', adminInfo);
+    },
+    setGoodsAction({ commit }, goods) {
+      commit('setGoods', goods);
     },
   },
   modules: {},
