@@ -77,6 +77,7 @@
       @changeVisible2="changeVisible2"
       :drawerVisible2="drawerVisible2"
       @editGoods="editGoods"
+      :editProps="editProps"
     >
     </EditDrawer>
   </div>
@@ -155,15 +156,24 @@ export default {
       currentPage: 1,
       total: 0,
       drawerVisible: false,
-      drawerVisible2: false
+      drawerVisible2: false,
+      eidtProps: {
+        soldQuantity: 0,
+        coverPath: "",
+        picturePath: ""
+      }
     };
   },
   mounted() {
-    // let _this = this;
     //需修改：调用获取全部商品的接口
-    // this.$api.getAllgoods().then(res => {
-    //   _this.tableData = res.data;
-    // }).catch((err) => this.$alert(err));
+    // let _this = this;
+    // this.$api
+    //   .getAllGoods()
+    //   .then(res => {
+    //     _this.tableData = res.data;
+    //     console.log(_this, res);
+    //   })
+    //   .catch(err => this.$alert(err));
     this.page(1);
   },
   methods: {
@@ -176,10 +186,18 @@ export default {
       //需修改：获取商品id，调用接口得到goods，将goods存入vuex
       // const _this = this;
       // this.$api
-      //   .getGoodsById(row.id,{})
-      //   .then((res) => {
-      //     _this.setGoodsAction(res.data);
-      //   });
+      //   .getGoodsById(row.id, {})
+      //   .then(res => {
+      //     let obj = this.deepClone(res.data);
+      //     delete obj.soldQuantity;
+      //     delete obj.coverPath;
+      //     delete obj.picturePath;
+      //     _this.eidtProps.soldQuantity = res.data.soldQuantity;
+      //     _this.eidtProps.coverPath = res.data.coverPath;
+      //     _this.eidtProps.picturePath = res.data.picturePath;
+      //     _this.setGoodsAction(obj);
+      //   })
+      //   .catch(err => this.$alert(err));
       this.drawerVisible2 = true;
     },
     changeVisible2(dv) {
@@ -199,6 +217,17 @@ export default {
           let itemId = row.id;
           this.tableData = this.tableData.filter(row => row.id !== itemId);
           //需修改：调用删除单个商品的接口完成删除
+          this.$api
+            .deleteGoodsById(row.id)
+            .then(res => {
+              if (String(res.code) === "0000") {
+                this.$message({
+                  type: "success",
+                  message: "删除成功!"
+                });
+              }
+            })
+            .catch(err => this.$alert(err));
 
           //如果当前页数据项仅为1个 且 当前页不为第一页，则翻到上一页
           let isPage = this.tableShow.length === 1 && this.currentPage !== 1;
@@ -242,6 +271,14 @@ export default {
           //需修改：调用删除多个商品的接口完成删除-若没有，则循环调用删除单个的接口
           if (items.length) {
             items.forEach(item => {
+              // this.$api
+              //   .deleteGoodsById(item.id)
+              //   .then(() => {
+              //     this.tableData = this.tableData.filter(
+              //       row => row.id !== item.id
+              //     );
+              //   })
+              //   .catch(err => this.$alert(err));
               this.tableData = this.tableData.filter(row => row.id !== item.id);
             });
           } else {
@@ -291,6 +328,7 @@ export default {
     },
     search() {
       console.log("yesss");
+      //需修改
       let _this = this;
       this.$api
         .getGoodsByKeyword(this.searchText, {})

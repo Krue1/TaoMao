@@ -230,6 +230,9 @@ export default {
     drawerVisible2: {
       type: Boolean,
       default: false
+    },
+    editProps: {
+      type: Object
     }
   },
   data() {
@@ -250,33 +253,26 @@ export default {
     return {
       loading: false,
       labelPosition: "left",
+      //需修改
+      // soldQuantity: this.editProps.soldQuantity,
+      // coverPath: this.editProps.coverPath,
+      // picturePath: this.editProps.picturePath,
       soldQuantity: 0,
       coverPath: "",
-      picturePath: [
-        {
-          name: "food.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
-        },
-        {
-          name: "food2.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
-        }
-      ],
-      form: {
-        breed: "",
-        name: "",
-        description: "",
-        image: "",
-        price: 0.0,
-        age: 0,
-        gender: "公",
-        vaccine: 0,
-        purebred: false,
-        insectRepellent: false,
-        inventory: 0
-      },
+      picturePath: "",
+      // form: {
+      //   breed: "",
+      //   name: "",
+      //   description: "",
+      //   image: "",
+      //   price: 0.0,
+      //   age: 0,
+      //   gender: "公",
+      //   vaccine: 0,
+      //   purebred: false,
+      //   insectRepellent: false,
+      //   inventory: 0
+      // },
       formLabelWidth: "80px",
       inlineFormLabelWidth: "55px",
       timer: null,
@@ -339,6 +335,9 @@ export default {
       set(dv) {
         this.$emit("changeVisible2", dv);
       }
+    },
+    form() {
+      return this.$store.state.goods;
     }
   },
   methods: {
@@ -351,6 +350,13 @@ export default {
           this.$refs.form.validate(valid => {
             if (valid) {
               //需修改：调用修改商品接口把对象传到后端
+              // const _this = this;
+              // this.$api
+              //   .modifyGoodsById(this.form.id, this.form)
+              //   .then(res => {
+              //     console.log(res.data);
+              //   })
+              //   .catch(err => this.$alert(err));
               this.$emit("editGoods");
               this.$message({
                 message: "提交成功",
@@ -367,7 +373,7 @@ export default {
             }
           });
         })
-        .catch(() => {});
+        .catch(err => this.$alert(err));
     },
     cancelForm() {
       this.$emit("changeVisible2", false);

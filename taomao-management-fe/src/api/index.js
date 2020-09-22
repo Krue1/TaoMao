@@ -22,6 +22,12 @@ const api = {
   getGoodsByKeyword(keyword, config) {
     return axios.get(base.goods + '/search/' + keyword, config);
   },
+  modifyGoodsById(id, data) {
+    return axios.post(base.goods + '/' + id, data);
+  },
+  deleteGoodsById(id) {
+    return axios.delete(base.goods + '/' + id);
+  },
 };
 
 export default api;
