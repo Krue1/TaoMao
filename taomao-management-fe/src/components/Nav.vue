@@ -1,8 +1,5 @@
 <template>
   <div class="nav">
-    <!-- <div class="nav-info">
-      <span>我的名字</span>
-    </div>-->
     <el-menu
       :default-active="this.$route.path.slice(1)"
       class="nav-menu"
