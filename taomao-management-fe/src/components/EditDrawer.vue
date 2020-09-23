@@ -22,12 +22,17 @@
               <el-form-item label="头图" :label-width="inlineFormLabelWidth">
                 <el-upload
                   class="cover-uploader"
-                  :action="'http://localhost:7002/goods/' + form.id + '/cover'"
+                  action=""
+                  :http-request="uploadCover"
                   :show-file-list="false"
                   :on-success="handleCoverSuccess"
                   :before-upload="beforeCoverUpload"
                 >
-                  <img v-if="coverPath" :src="coverPath" class="cover" />
+                  <img
+                    v-if="editProps.coverPath"
+                    :src="'http://47.100.62.222:8003/' + editProps.coverPath"
+                    class="cover"
+                  />
                   <i v-else class="el-icon-plus cover-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
@@ -38,16 +43,15 @@
                   class="pictureUploader"
                   ref="pictureUploader"
                   list-type="picture"
-                  :action="
-                    'http://localhost:7002/goods/' + form.id + '/picture'
-                  "
+                  action=""
+                  :http-request="addPicture"
                   :on-preview="handlePreview"
                   :on-remove="handleRemove"
-                  :file-list="picturePath"
+                  :file-list="editProps.picturePath"
                   :auto-upload="false"
                 >
                   <el-button slot="trigger" size="small" type="primary"
-                    >选取文件</el-button
+                    >选取图片</el-button
                   >
                   <el-button
                     style="margin-left: 10px;"
@@ -168,7 +172,7 @@
             <el-col :span="16">
               <el-form-item label="已售" :label-width="inlineFormLabelWidth">
                 <el-input
-                  v-model.number="soldQuantity"
+                  v-model.number="editProps.soldQuantity"
                   autocomplete="off"
                   class="inline-input"
                   :disabled="true"
@@ -224,6 +228,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "EditDrawer",
   props: {
@@ -253,29 +258,10 @@ export default {
     return {
       loading: false,
       labelPosition: "left",
-      //需修改
-      // soldQuantity: this.editProps.soldQuantity,
-      // coverPath: this.editProps.coverPath,
-      // picturePath: this.editProps.picturePath,
-      soldQuantity: 0,
-      coverPath: "",
-      picturePath: "",
-      // form: {
-      //   breed: "",
-      //   name: "",
-      //   description: "",
-      //   image: "",
-      //   price: 0.0,
-      //   age: 0,
-      //   gender: "公",
-      //   vaccine: 0,
-      //   purebred: false,
-      //   insectRepellent: false,
-      //   inventory: 0
-      // },
       formLabelWidth: "80px",
       inlineFormLabelWidth: "55px",
       timer: null,
+      pictures: [],
       rules: {
         name: [
           { required: true, message: "请输入商品名称", trigger: "blur" },
@@ -341,27 +327,46 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["setGoodsAction"]),
     handleClose() {
       if (this.loading) {
         return;
       }
+      console.log(this.editProps);
       this.$confirm("确认修改商品信息？")
         .then(() => {
           this.$refs.form.validate(valid => {
             if (valid) {
               //需修改：调用修改商品接口把对象传到后端
-              // const _this = this;
-              // this.$api
-              //   .modifyGoodsById(this.form.id, this.form)
-              //   .then(res => {
-              //     console.log(res.data);
-              //   })
-              //   .catch(err => this.$alert(err));
-              this.$emit("editGoods");
-              this.$message({
-                message: "提交成功",
-                type: "success"
-              });
+              const _this = this;
+              let obj = this.deepClone(this.form);
+              obj.gender = this.form.gender === "公" ? 1 : 0;
+              this.$api
+                .modifyGoodsById(obj.id, obj)
+                .then(res => {
+                  let message = res.data.message;
+                  let type = "success";
+                  switch (String(res.data.code)) {
+                    case "0000":
+                      type = "success";
+                      this.$message({
+                        message: "修改成功",
+                        type: "success"
+                      });
+                      this.setGoodsAction(obj);
+                      this.$emit("editGoods");
+                      break;
+                    case "2101":
+                    case "2102":
+                      type = "error";
+                      _this.$message({
+                        message: message,
+                        type: type
+                      });
+                      break;
+                  }
+                })
+                .catch(err => this.$alert(err));
               this.$refs.form.resetFields();
               this.$emit("changeVisible2", false);
             } else {
@@ -393,14 +398,71 @@ export default {
       }
       return isJPG && isLt2M;
     },
+    addPicture(obj) {
+      this.pictures.push(obj.file);
+    },
     uploadPicture() {
       this.$refs.pictureUploader.submit();
+      let fd = new FormData(); //参数的格式是formData格式的
+      this.pictures.forEach(picture => {
+        fd.append("pictures", picture);
+      });
+      this.$api
+        .uploadPictureById(this.form.id, fd)
+        .then(res => {
+          console.log(res.data);
+          let message = res.data.message;
+          let type = "success";
+          switch (String(res.data.code)) {
+            case "0000":
+              break;
+            case "2102":
+            case "2104":
+              type = "error";
+              break;
+          }
+          this.$message({
+            message: message,
+            type: type
+          });
+          this.editProps.picturePath = res.data.data.path.map(item => {
+            return {
+              name: item,
+              url: "http://47.100.62.222:8003/" + item
+            };
+          });
+        })
+        .catch(err => this.$alert(err));
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
     handlePreview(file) {
       console.log(file);
+    },
+    uploadCover(obj) {
+      let fd = new FormData(); //参数的格式是formData格式的
+      fd.append("cover", obj.file); //参数
+      this.$api
+        .uploadCoverById(this.form.id, fd)
+        .then(res => {
+          let message = res.data.message;
+          let type = "success";
+          switch (String(res.data.code)) {
+            case "0000":
+              break;
+            case "2101":
+            case "2104":
+              type = "error";
+              break;
+          }
+          this.$message({
+            message: message,
+            type: type
+          });
+          this.editProps.coverPath = res.data.data.path;
+        })
+        .catch(err => this.$alert(err));
     }
   }
 };

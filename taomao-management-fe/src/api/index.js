@@ -28,6 +28,12 @@ const api = {
   deleteGoodsById(id) {
     return axios.delete(base.goods + '/' + id);
   },
+  uploadCoverById(id, data) {
+    return axios.post(base.goods + '/' + id + '/cover', data);
+  },
+  uploadPictureById(id, data) {
+    return axios.post(base.goods + '/' + id + '/picture', data);
+  },
 };
 
 export default api;

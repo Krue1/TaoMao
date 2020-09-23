@@ -16,8 +16,6 @@ const routes = [
       {
         path: '/',
         redirect: '/news',
-        // name: 'Home',
-        // component: Home,
       },
       {
         path: '/news',
@@ -37,10 +35,9 @@ const routes = [
         },
       },
       {
-        path: '/music',
-        name: 'Music',
-        component: () =>
-          import(/* webpackChunkName: "about" */ '../views/Music.vue'),
+        path: '/order',
+        name: 'Order',
+        component: () => import('../views/Order.vue'),
         meta: {
           requireAuth: true,
         },

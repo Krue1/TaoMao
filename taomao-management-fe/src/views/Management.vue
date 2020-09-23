@@ -28,19 +28,19 @@
         <el-table-column
           prop="id"
           label="商品ID"
-          width="120"
+          width="200"
           show-overflow-tooltip
         >
         </el-table-column>
-        <el-table-column label="名称" width="240" show-overflow-tooltip>
+        <el-table-column label="名称" width="200" show-overflow-tooltip>
           <template slot-scope="scope">{{ scope.row.name }}</template>
         </el-table-column>
         <el-table-column prop="breed" label="品种" width="120">
         </el-table-column>
         <el-table-column prop="price" label="价格" width="120">
         </el-table-column>
-        <el-table-column prop="sale" label="已售" width="120">
-        </el-table-column>
+        <!-- <el-table-column prop="sale" label="已售" width="120">
+        </el-table-column> -->
         <el-table-column prop="inventory" label="库存" width="120">
         </el-table-column>
         <el-table-column label="操作">
@@ -91,64 +91,7 @@ import EditDrawer from "@/components/EditDrawer";
 export default {
   data() {
     return {
-      tableData: [
-        {
-          id: 1,
-          name: "上海市普陀区金沙江路 1518 弄",
-          breed: "牛大哥",
-          price: 234,
-          sale: 1,
-          inventory: 11
-        },
-        {
-          id: 2,
-          name: "上海市普陀区金沙江路 1518 弄",
-          breed: "牛大哥",
-          price: 234,
-          sale: 1,
-          inventory: 4
-        },
-        {
-          id: 3,
-          name: "上海市普陀区金沙江路 1518 弄",
-          breed: "牛大哥",
-          price: 234,
-          sale: 1,
-          inventory: 1
-        },
-        {
-          id: 4,
-          name: "上海市普陀区金沙江路 1518 弄",
-          breed: "牛大哥",
-          price: 234,
-          sale: 1,
-          inventory: 2
-        },
-        {
-          id: 5,
-          name: "上海市普陀区金沙江路 1518 弄",
-          breed: "牛大哥",
-          price: 234,
-          sale: 1,
-          inventory: 4
-        },
-        {
-          id: 6,
-          name: "上海市普陀区金沙江路 1518 弄",
-          breed: "牛大哥",
-          price: 234,
-          sale: 1,
-          inventory: 5
-        },
-        {
-          id: 7,
-          name: "上海市普陀区金沙江路 1518 弄",
-          breed: "牛大哥",
-          price: 234,
-          sale: 1,
-          inventory: 3
-        }
-      ],
+      tableData: [],
       tableShow: [],
       multipleSelection: [],
       searchText: "",
@@ -157,24 +100,24 @@ export default {
       total: 0,
       drawerVisible: false,
       drawerVisible2: false,
-      eidtProps: {
+      editProps: {
         soldQuantity: 0,
         coverPath: "",
         picturePath: ""
-      }
+      },
+      editedGoods: {}
     };
   },
   mounted() {
     //需修改：调用获取全部商品的接口
-    // let _this = this;
-    // this.$api
-    //   .getAllGoods()
-    //   .then(res => {
-    //     _this.tableData = res.data;
-    //     console.log(_this, res);
-    //   })
-    //   .catch(err => this.$alert(err));
-    this.page(1);
+    let _this = this;
+    this.$api
+      .getAllGoods()
+      .then(res => {
+        _this.tableData = res.data.data;
+        this.page(1);
+      })
+      .catch(err => this.$alert(err));
   },
   methods: {
     ...mapActions(["setGoodsAction"]),
@@ -182,28 +125,41 @@ export default {
       this.multipleSelection = val;
     },
     handleEdit(index, row) {
-      console.log(index, row);
       //需修改：获取商品id，调用接口得到goods，将goods存入vuex
-      // const _this = this;
-      // this.$api
-      //   .getGoodsById(row.id, {})
-      //   .then(res => {
-      //     let obj = this.deepClone(res.data);
-      //     delete obj.soldQuantity;
-      //     delete obj.coverPath;
-      //     delete obj.picturePath;
-      //     _this.eidtProps.soldQuantity = res.data.soldQuantity;
-      //     _this.eidtProps.coverPath = res.data.coverPath;
-      //     _this.eidtProps.picturePath = res.data.picturePath;
-      //     _this.setGoodsAction(obj);
-      //   })
-      //   .catch(err => this.$alert(err));
+      const _this = this;
+      this.$api
+        .getGoodsById(row.id, {})
+        .then(res => {
+          console.log(res.data.data);
+          let obj = this.deepClone(res.data.data);
+          obj.gender = obj.gender === 1 ? "公" : "母";
+          delete obj.soldQuantity;
+          delete obj.coverPath;
+          delete obj.picturePath;
+          _this.editProps.soldQuantity = res.data.data.soldQuantity;
+          _this.editProps.coverPath = res.data.data.coverPath;
+          _this.editProps.picturePath = res.data.data.picturePath.map(item => {
+            return {
+              name: item,
+              url: "http://47.100.62.222:8003/" + item
+            };
+          });
+          console.log(this.editProps.soldQuantity);
+          _this.setGoodsAction(obj);
+        })
+        .catch(err => this.$alert(err));
+      //被修改的商品
+      this.editedGoods = row;
       this.drawerVisible2 = true;
     },
     changeVisible2(dv) {
       this.drawerVisible2 = dv;
     },
     editGoods() {
+      this.editedGoods = Object.assign(
+        this.editedGoods,
+        this.$store.state.goods
+      );
       this.page(this.currentPage);
     },
     handleDelete(index, row) {
@@ -271,14 +227,14 @@ export default {
           //需修改：调用删除多个商品的接口完成删除-若没有，则循环调用删除单个的接口
           if (items.length) {
             items.forEach(item => {
-              // this.$api
-              //   .deleteGoodsById(item.id)
-              //   .then(() => {
-              //     this.tableData = this.tableData.filter(
-              //       row => row.id !== item.id
-              //     );
-              //   })
-              //   .catch(err => this.$alert(err));
+              this.$api
+                .deleteGoodsById(item.id)
+                .then(() => {
+                  this.tableData = this.tableData.filter(
+                    row => row.id !== item.id
+                  );
+                })
+                .catch(err => this.$alert(err));
               this.tableData = this.tableData.filter(row => row.id !== item.id);
             });
           } else {
@@ -333,8 +289,7 @@ export default {
       this.$api
         .getGoodsByKeyword(this.searchText, {})
         .then(res => {
-          // _this.tableData = res.data;
-          console.log(res);
+          _this.tableData = res.data.data;
           _this.page(1);
         })
         .catch(err => this.$alert(err));

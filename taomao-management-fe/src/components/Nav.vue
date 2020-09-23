@@ -21,9 +21,9 @@
         <i class="el-icon-menu"></i>
         <span slot="title">商品管理</span>
       </el-menu-item>
-      <el-menu-item index="music">
+      <el-menu-item index="order">
         <i class="el-icon-document"></i>
-        <span slot="title">音乐</span>
+        <span slot="title">订单管理</span>
       </el-menu-item>
       <el-menu-item index="jokes">
         <i class="el-icon-setting"></i>
@@ -55,8 +55,8 @@ export default {
           index: "management"
         },
         {
-          title: "音乐",
-          index: "music"
+          title: "订单管理",
+          index: "order"
         },
         {
           title: "笑话",
@@ -76,8 +76,8 @@ export default {
         case "management":
           this.$router.push({ name: "Management" });
           break;
-        case "music":
-          this.$router.push({ name: "Music" });
+        case "order":
+          this.$router.push({ name: "Order" });
           break;
         case "jokes":
           this.$router.push({ name: "Jokes" });

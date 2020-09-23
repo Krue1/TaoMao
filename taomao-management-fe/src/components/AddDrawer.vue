@@ -275,42 +275,42 @@ export default {
           this.$refs.form.validate(valid => {
             if (valid) {
               //需修改：调用新增商品接口把对象传过去，然后获得插入数据库后的对象传给父组件
-              // const _this = this;
-              // this.$api.addGoods(this.form).then(res => {
-              //   _this.form.id = res.data.id;
-              //   let message = res.message;
-              //   let type = "success";
-              //   switch (String(res.code)) {
-              //     case "0000":
-              //       type = "success";
-              //       break;
-              //     case "0101":
-              //       type = "info";
-              //       break;
-              //     case "0102":
-              //     case "0103":
-              //       type = "error";
-              //       _this.$message({
-              //         message: message,
-              //         type: type
-              //       });
-              //       localStorage.clear();
-              //       _this.setTokenAction("");
-              //       _this.setAdminInfoAction({});
-              //       _this.$router.push({ name: "Login" });
-              //       break;
-              //     case "2101":
-              //     case "2103":
-              //       type = "error";
-              //       break;
-              //   }
-              // });
+              const _this = this;
               let obj = this.deepClone(this.form);
-              obj.id = String(new Date());
-              this.$emit("addGoods", obj);
-              this.$message({
-                message: "提交成功",
-                type: "success"
+              obj.gender = this.form.gender === "公" ? 1 : 0;
+              this.$api.addGoods(obj).then(res => {
+                obj.id = res.data.data.id;
+                let message = res.data.message;
+                let type = "success";
+                switch (String(res.data.code)) {
+                  case "0000":
+                    message = "提交成功";
+                    this.$emit("addGoods", obj);
+                    break;
+                  case "0101":
+                    type = "info";
+                    break;
+                  case "0102":
+                  case "0103":
+                    type = "error";
+                    _this.$message({
+                      message: message,
+                      type: type
+                    });
+                    localStorage.clear();
+                    _this.setTokenAction("");
+                    _this.setAdminInfoAction({});
+                    _this.$router.push({ name: "Login" });
+                    break;
+                  case "2101":
+                  case "2103":
+                    type = "error";
+                    break;
+                }
+                this.$message({
+                  message: message,
+                  type: type
+                });
               });
               this.$refs.form.resetFields();
               this.$emit("changeVisible", false);
