@@ -10,7 +10,7 @@
         >
           <el-card>
             <h4>{{ joke.name }}</h4>
-            <!-- <video :src="joke.video" controls="controls" height="300px"></video> -->
+            <video :src="joke.video" controls="controls" height="300px"></video>
             <p>{{ joke.text }}</p>
           </el-card>
         </el-timeline-item>

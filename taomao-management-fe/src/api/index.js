@@ -11,7 +11,7 @@ const api = {
     return axios.get(base.jokes, config);
   },
   addGoods(data) {
-    return axios.post(base.goods, data);
+    return axios.post(base.bgGoods, data);
   },
   getAllGoods() {
     return axios.get(base.goods);
@@ -23,16 +23,28 @@ const api = {
     return axios.get(base.goods + '/search/' + keyword, config);
   },
   modifyGoodsById(id, data) {
-    return axios.post(base.goods + '/' + id, data);
+    return axios.post(base.bgGoods + '/' + id, data);
   },
   deleteGoodsById(id) {
-    return axios.delete(base.goods + '/' + id);
+    return axios.delete(base.bgGoods + '/' + id);
   },
   uploadCoverById(id, data) {
-    return axios.post(base.goods + '/' + id + '/cover', data);
+    return axios.post(base.bgGoods + '/' + id + '/cover', data);
   },
   uploadPictureById(id, data) {
-    return axios.post(base.goods + '/' + id + '/picture', data);
+    return axios.post(base.bgGoods + '/' + id + '/picture', data);
+  },
+  login(data, config) {
+    return axios.post('/admin/login', data, config);
+  },
+  queryOrderByStatus(data, config) {
+    return axios.post(base.order + '/queryOrderByStatus', data, config);
+  },
+  cancelOrder(data, config) {
+    return axios.post(base.order + '/cancelOrder', data, config);
+  },
+  completeOrder(data, config) {
+    return axios.post(base.order + '/finishOrder', data, config);
   },
 };
 

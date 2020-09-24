@@ -15,21 +15,12 @@ const routes = [
     children: [
       {
         path: '/',
-        redirect: '/news',
-      },
-      {
-        path: '/news',
-        name: 'News',
-        component: () => import('../views/News.vue'),
-        meta: {
-          requireAuth: true,
-        },
+        redirect: '/management',
       },
       {
         path: '/management',
         name: 'Management',
-        component: () =>
-          import(/* webpackChunkName: "about" */ '../views/Management.vue'),
+        component: () => import('../views/Management.vue'),
         meta: {
           requireAuth: true,
         },
@@ -45,8 +36,7 @@ const routes = [
       {
         path: '/jokes',
         name: 'Jokes',
-        component: () =>
-          import(/* webpackChunkName: "about" */ '../views/Jokes.vue'),
+        component: () => import('../views/Jokes.vue'),
         meta: {
           requireAuth: true,
         },

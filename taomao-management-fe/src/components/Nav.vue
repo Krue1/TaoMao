@@ -10,10 +10,6 @@
       <div class="nav-info">
         <span>{{ adminInfo.name }}</span>
       </div>
-      <el-menu-item index="news">
-        <i class="el-icon-menu"></i>
-        <span slot="title">新闻</span>
-      </el-menu-item>
       <el-menu-item index="management">
         <i class="el-icon-menu"></i>
         <span slot="title">商品管理</span>
@@ -44,10 +40,6 @@ export default {
       activeIndex: "news",
       nav_menu_data: [
         {
-          title: "新闻",
-          index: "news"
-        },
-        {
           title: "商品管理",
           index: "management"
         },
@@ -67,9 +59,6 @@ export default {
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
       switch (key) {
-        case "news":
-          this.$router.push({ name: "News" });
-          break;
         case "management":
           this.$router.push({ name: "Management" });
           break;

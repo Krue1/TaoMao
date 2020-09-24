@@ -9,10 +9,10 @@
         label-width="60px"
         class="demo-ruleForm"
       >
-        <el-form-item prop="account">
+        <el-form-item prop="id">
           <el-input
             type="text"
-            v-model="ruleForm.account"
+            v-model="ruleForm.id"
             prefix-icon="el-icon-user-solid"
             placeholder="请输入你的帐号"
             autofocus
@@ -40,7 +40,7 @@
 import { mapActions } from "vuex";
 export default {
   data() {
-    let validateAccount = (rule, value, callback) => {
+    let validateId = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入帐号"));
       } else if (!/^1[3|4|5|6|7|8|9]\d{9}$/.test(value)) {
@@ -58,11 +58,11 @@ export default {
     };
     return {
       ruleForm: {
-        account: "",
+        id: "",
         password: ""
       },
       rules: {
-        account: [{ validator: validateAccount, trigger: "blur" }],
+        id: [{ validator: validateId, trigger: "blur" }],
         password: [{ validator: validatePassword, trigger: "blur" }]
       }
     };
@@ -73,19 +73,44 @@ export default {
       let _self = this;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          _self.$message({
-            message: "登录成功",
-            type: "success"
-          });
-          const token = 222;
-          const adminInfo = {
-            name: "Admin"
-          };
-          this.setTokenAction(token);
-          this.setAdminInfoAction(adminInfo);
-          localStorage.setItem("token", token);
-          localStorage.setItem("adminInfo", JSON.stringify(adminInfo));
-          _self.$router.push({ name: "News" });
+          this.$api
+            .login(this.ruleForm, {
+              "Content-Type": "application/json"
+            })
+            .then(res => {
+              let message = res.data.message;
+              let type = "success";
+              if (res.data.code !== "0000") {
+                type = "error";
+              } else {
+                message = "登录成功";
+                const token = res.data.data.token;
+                const adminInfo = res.data.data.user;
+                this.setTokenAction(token);
+                this.setAdminInfoAction(adminInfo);
+                localStorage.setItem("token", token);
+                localStorage.setItem("adminInfo", JSON.stringify(adminInfo));
+                _self.$router.push({ name: "Management" });
+              }
+              _self.$message({
+                message: message,
+                type: type
+              });
+            })
+            .catch(err => this.$alert(err));
+          // _self.$message({
+          //   message: "登录成功",
+          //   type: "success"
+          // });
+          // const token = 222;
+          // const adminInfo = {
+          //   name: "Admin"
+          // };
+          // this.setTokenAction(token);
+          // this.setAdminInfoAction(adminInfo);
+          // localStorage.setItem("token", token);
+          // localStorage.setItem("adminInfo", JSON.stringify(adminInfo));
+          // _self.$router.push({ name: "News" });
         } else {
           console.log("error submit!!");
           return false;

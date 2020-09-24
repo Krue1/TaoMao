@@ -2,10 +2,10 @@
   <div id="order">
     <HeaderTitle name="订单管理" class="header-title">
       <template>
-        <el-radio-group v-model="status" @change="page(currentPage)">
+        <el-radio-group v-model="status" @change="page(1)">
           <el-radio-button label="已提交"></el-radio-button>
           <el-radio-button label="已完成"></el-radio-button>
-          <el-radio-button label="已取消"></el-radio-button>
+          <el-radio-button label="取消"></el-radio-button>
         </el-radio-group>
       </template>
     </HeaderTitle>
@@ -70,7 +70,7 @@
         <el-table-column
           prop="sid"
           label="sid"
-          width="120"
+          width="200"
           show-overflow-tooltip
         >
         </el-table-column>
@@ -94,6 +94,7 @@
               :enterable="false"
             >
               <el-button
+                v-if="status === '已提交'"
                 type="text"
                 icon="el-icon-check"
                 @click="complete(scope.row)"
@@ -105,6 +106,7 @@
               :enterable="false"
             >
               <el-button
+                v-if="status === '已提交'"
                 type="text"
                 icon="el-icon-close"
                 @click="cancel(scope.row)"
@@ -123,6 +125,45 @@
         :total="total"
       ></el-pagination>
     </div>
+    <el-dialog
+      title="订单详情"
+      :visible.sync="centerDialogVisible"
+      width="60%"
+      center
+    >
+      <el-card v-for="orderDetail of orderDetails" :key="orderDetail.goodId">
+        <div style="display:flex;justify-content:center;">
+          <el-form :inline="true" :model="orderDetail">
+            <el-form-item label="商品ID">
+              <span>{{ orderDetail.goodId }}</span>
+            </el-form-item>
+            <el-form-item>
+              <el-divider direction="vertical"></el-divider>
+            </el-form-item>
+            <el-form-item label="商品名">
+              <span>{{ orderDetail.goodName }}</span>
+            </el-form-item>
+            <el-form-item>
+              <el-divider direction="vertical"></el-divider>
+            </el-form-item>
+            <el-form-item label="单价">
+              <span>{{ orderDetail.price }}</span>
+            </el-form-item>
+            <el-form-item>
+              <el-divider direction="vertical"></el-divider>
+            </el-form-item>
+            <el-form-item label="数量">
+              <span>{{ orderDetail.number }}</span>
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-card>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="centerDialogVisible = false">
+          关 闭
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -148,28 +189,165 @@ export default {
           finishTime: "2020-09-22 21:29:30",
           payNumber: "222",
           status: "已提交",
-          account: "223313"
+          account: "223313",
+          orderDetails: [
+            {
+              goodId: "1111",
+              number: "3",
+              goodName: "橘猫",
+              src: "ww",
+              orderId: "1111",
+              price: 23300
+            },
+            {
+              goodId: "1111",
+              number: "3",
+              goodName: "橘猫",
+              src: "ww",
+              orderId: "1111",
+              price: 23300
+            },
+            {
+              goodId: "1111",
+              number: "3",
+              goodName: "橘猫",
+              src: "ww",
+              orderId: "1111",
+              price: 23300
+            },
+            {
+              goodId: "1111",
+              number: "3",
+              goodName: "橘猫",
+              src: "ww",
+              orderId: "1111",
+              price: 23300
+            },
+            {
+              goodId: "1111",
+              number: "3",
+              goodName: "橘猫",
+              src: "ww",
+              orderId: "1111",
+              price: 23300
+            }
+          ]
         }
       ],
       status: "已提交",
       pageSize: 5,
       currentPage: 1,
-      total: 10
+      total: 250,
+      centerDialogVisible: false,
+      orderDetails: []
     };
+  },
+  mounted() {
+    this.page(1);
   },
   methods: {
     page(currentPage) {
       this.currentPage = currentPage;
-      //可能需修改：调用查询商品接口-有自带分页查询的情况下
+      //需修改
+      let _this = this;
+      this.$api
+        .queryOrderByStatus(
+          {
+            queryContent: this.status,
+            start: (currentPage - 1) * this.pageSize,
+            limit: this.pageSize
+          },
+          {
+            headers: {
+              ContentType: "application/json"
+            }
+          }
+        )
+        .then(res => {
+          let message = res.data.message;
+          let type = "success";
+          if (res.data.statusCode !== "0000") {
+            type = "error";
+            _this.tableData = null;
+          } else {
+            _this.tableData = res.data.content.data;
+          }
+          this.$message({
+            message: message,
+            type: type
+          });
+        })
+        .catch(err => this.$alert(err));
     },
     handleDetails(row) {
-      console.log(row);
+      this.orderDetails = row.orderDetails;
+      this.centerDialogVisible = true;
     },
     complete(row) {
-      console.log(row);
+      let _this = this;
+      this.$api
+        .completeOrder(
+          {
+            sid: row.sid
+          },
+          {
+            headers: {
+              ContentType: "application/json"
+            }
+          }
+        )
+        .then(res => {
+          let message = res.data.message;
+          let type = "success";
+          if (res.data.statusCode !== "0000") {
+            message = "操作失败";
+            type = "error";
+          } else {
+            message = "订单已完成";
+            row.status = "已完成";
+            _this.tableData = _this.tableData.filter(
+              item => item.sid !== row.sid
+            );
+          }
+          this.$message({
+            message: message,
+            type: type
+          });
+        })
+        .catch(err => this.$alert(err));
     },
     cancel(row) {
-      console.log(row);
+      let _this = this;
+      this.$api
+        .cancelOrder(
+          {
+            sid: row.sid
+          },
+          {
+            headers: {
+              ContentType: "application/json"
+            }
+          }
+        )
+        .then(res => {
+          let message = res.data.message;
+          let type = "success";
+          if (res.data.statusCode !== "0000") {
+            message = "订单取消失败";
+            type = "error";
+          } else {
+            message = "订单取消成功";
+            row.status = "已取消";
+            _this.tableData = _this.tableData.filter(
+              item => item.sid !== row.sid
+            );
+          }
+          this.$message({
+            message: message,
+            type: type
+          });
+        })
+        .catch(err => this.$alert(err));
     }
   },
   components: {
@@ -225,6 +403,21 @@ export default {
 .el-table {
   .el-checkbox__inner {
     border-radius: 50%;
+  }
+}
+.el-dialog {
+  height: 80vh;
+  overflow: hidden;
+  .el-dialog__body {
+    position: absolute;
+    left: 0;
+    top: 54px;
+    bottom: 0;
+    right: 0;
+    padding: 0;
+    z-index: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 }
 </style>

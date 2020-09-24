@@ -8,11 +8,19 @@ module.exports = {
       '/api': {
         // 此处的写法，目的是为了 将 /api 替换成 https://www.baidu.com/
         // target: 'http://v.juhe.cn/',
-        target: 'http://47.100.62.222:8003',
+        // target: 'http://47.100.62.222:8003',
+        target: 'http://47.107.55.195:7002',
         // 允许跨域
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/',
+        },
+      },
+      '/loginApi': {
+        target: 'http://47.107.55.195:8002',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/loginApi': '/',
         },
       },
     },

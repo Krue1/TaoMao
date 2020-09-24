@@ -35,13 +35,26 @@
         <el-table-column label="名称" width="200" show-overflow-tooltip>
           <template slot-scope="scope">{{ scope.row.name }}</template>
         </el-table-column>
-        <el-table-column prop="breed" label="品种" width="120">
+        <el-table-column
+          prop="breed"
+          label="品种"
+          width="120"
+          show-overflow-tooltip
+        >
         </el-table-column>
-        <el-table-column prop="price" label="价格" width="120">
+        <el-table-column
+          prop="price"
+          label="价格"
+          width="120"
+          show-overflow-tooltip
+        >
         </el-table-column>
-        <!-- <el-table-column prop="sale" label="已售" width="120">
-        </el-table-column> -->
-        <el-table-column prop="inventory" label="库存" width="120">
+        <el-table-column
+          prop="inventory"
+          label="库存"
+          width="120"
+          show-overflow-tooltip
+        >
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -283,16 +296,25 @@ export default {
       this.page(this.currentPage);
     },
     search() {
-      console.log("yesss");
       //需修改
       let _this = this;
-      this.$api
-        .getGoodsByKeyword(this.searchText, {})
-        .then(res => {
-          _this.tableData = res.data.data;
-          _this.page(1);
-        })
-        .catch(err => this.$alert(err));
+      if (this.searchText) {
+        this.$api
+          .getGoodsByKeyword(this.searchText, {})
+          .then(res => {
+            _this.tableData = res.data.data;
+            _this.page(1);
+          })
+          .catch(err => this.$alert(err));
+      } else {
+        this.$api
+          .getAllGoods()
+          .then(res => {
+            _this.tableData = res.data.data;
+            this.page(1);
+          })
+          .catch(err => this.$alert(err));
+      }
     }
   },
   components: {
