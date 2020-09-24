@@ -1,6 +1,12 @@
 const isPro = Object.is(process.env.NODE_ENV, 'development');
 console.log(isPro);
 module.exports = {
+  // 公共路径(必须有的)
+  publicPath: './',
+  // 输出文件目录
+  outputDir: 'dist',
+  // 静态资源存放的文件夹(相对于ouputDir)
+  assetsDir: 'static',
   devServer: {
     port: 8080,
     host: '127.0.0.1',

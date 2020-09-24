@@ -235,9 +235,9 @@ export default {
         }
       ],
       status: "已提交",
-      pageSize: 5,
+      pageSize: 7,
       currentPage: 1,
-      total: 250,
+      total: 350,
       centerDialogVisible: false,
       orderDetails: []
     };
@@ -406,7 +406,7 @@ export default {
   }
 }
 .el-dialog {
-  height: 80vh;
+  height: 75vh;
   overflow: hidden;
   .el-dialog__body {
     position: absolute;

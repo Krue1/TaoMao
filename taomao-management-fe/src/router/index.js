@@ -33,14 +33,14 @@ const routes = [
           requireAuth: true,
         },
       },
-      {
-        path: '/jokes',
-        name: 'Jokes',
-        component: () => import('../views/Jokes.vue'),
-        meta: {
-          requireAuth: true,
-        },
-      },
+      // {
+      //   path: '/jokes',
+      //   name: 'Jokes',
+      //   component: () => import('../views/Jokes.vue'),
+      //   meta: {
+      //     requireAuth: true,
+      //   },
+      // },
     ],
   },
   {

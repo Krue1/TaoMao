@@ -60,9 +60,9 @@
                     @click="uploadPicture"
                     >上传到服务器</el-button
                   >
-                  <div slot="tip" class="el-upload__tip">
+                  <!-- <div slot="tip" class="el-upload__tip">
                     只能上传jpg/png文件
-                  </div>
+                  </div> -->
                 </el-upload>
               </el-form-item>
             </el-col>

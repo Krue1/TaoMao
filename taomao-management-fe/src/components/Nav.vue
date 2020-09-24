@@ -18,10 +18,10 @@
         <i class="el-icon-document"></i>
         <span slot="title">订单管理</span>
       </el-menu-item>
-      <el-menu-item index="jokes">
+      <!-- <el-menu-item index="jokes">
         <i class="el-icon-setting"></i>
         <span slot="title">笑话</span>
-      </el-menu-item>
+      </el-menu-item> -->
       <div class="logout-button">
         <el-button type="text" @click="logout">
           <i class="el-icon-switch-button"></i>
@@ -46,11 +46,11 @@ export default {
         {
           title: "订单管理",
           index: "order"
-        },
-        {
-          title: "笑话",
-          index: "jokes"
         }
+        // {
+        //   title: "笑话",
+        //   index: "jokes"
+        // }
       ]
     };
   },
@@ -65,9 +65,9 @@ export default {
         case "order":
           this.$router.push({ name: "Order" });
           break;
-        case "jokes":
-          this.$router.push({ name: "Jokes" });
-          break;
+        // case "jokes":
+        //   this.$router.push({ name: "Jokes" });
+        //   break;
       }
     },
     handleOpen(key, keyPath) {
