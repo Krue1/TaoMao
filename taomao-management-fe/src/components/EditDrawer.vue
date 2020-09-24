@@ -433,6 +433,7 @@ export default {
           });
         })
         .catch(err => this.$alert(err));
+      this.pictures = [];
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);

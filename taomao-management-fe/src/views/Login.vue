@@ -38,6 +38,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import axios from "@/utils/http";
 export default {
   data() {
     let validateId = (rule, value, callback) => {
@@ -90,6 +91,7 @@ export default {
                 this.setAdminInfoAction(adminInfo);
                 localStorage.setItem("token", token);
                 localStorage.setItem("adminInfo", JSON.stringify(adminInfo));
+                axios.defaults.headers.common["Authorization"] = token;
                 _self.$router.push({ name: "Management" });
               }
               _self.$message({
